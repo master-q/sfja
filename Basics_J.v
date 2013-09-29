@@ -115,32 +115,39 @@ Definition admit {T: Type} : T.  Admitted.
 (** この関数はどちらか、もしくは両方が[false]になったときに[true]を返すものである。 *)
 
 Definition nandb (b1:bool) (b2:bool) : bool :=
-  (* FILL IN HERE *) admit.
+  match b1, b2 with
+  | false, _ => true
+  | _, false => true
+  | true, true => false
+  end.
 
 (** 下の定義から[Admitted.]を取り去り、代わりに"[Proof. simpl. reflexivity. Qed.]"で検証できるようなコードを記述しなさい。 *)
 
 Example test_nandb1:               (nandb true false) = true.
-(* FILL IN HERE *) Admitted.
+Proof. simpl. reflexivity.  Qed.
 Example test_nandb2:               (nandb false false) = true.
-(* FILL IN HERE *) Admitted.
+Proof. simpl. reflexivity.  Qed.
 Example test_nandb3:               (nandb false true) = true.
-(* FILL IN HERE *) Admitted.
+Proof. simpl. reflexivity.  Qed.
 Example test_nandb4:               (nandb true true) = false.
-(* FILL IN HERE *) Admitted.
+Proof. simpl. reflexivity.  Qed.
 (** [] *)
 
 (** **** 練習問題: ★ (andb3) *)
 Definition andb3 (b1:bool) (b2:bool) (b3:bool) : bool :=
-  (* ここを埋めなさい *) admit.
+  match b1, b2, b3 with
+  | true, true, true => true
+  | _, _, _ => false
+  end.
 
 Example test_andb31:                 (andb3 true true true) = true.
-(* FILL IN HERE *) Admitted.
+Proof. simpl. reflexivity.  Qed.
 Example test_andb32:                 (andb3 false true true) = false.
-(* FILL IN HERE *) Admitted.
+Proof. simpl. reflexivity.  Qed.
 Example test_andb33:                 (andb3 true false true) = false.
-(* FILL IN HERE *) Admitted.
+Proof. simpl. reflexivity.  Qed.
 Example test_andb34:                 (andb3 true true false) = false.
-(* FILL IN HERE *) Admitted.
+Proof. simpl. reflexivity.  Qed.
 (** [] *)
 
 
@@ -300,12 +307,15 @@ Proof. simpl. reflexivity.  Qed.
     これをCoqでの定義に書き直しなさい。 *)
 
 Fixpoint factorial (n:nat) : nat :=
-  (* FILL IN HERE *) admit.
+  match n with
+  | O => S O
+  | S n' => mult n (factorial n')
+  end.
 
 Example test_factorial1:          (factorial 3) = 6.
-(* FILL IN HERE *) Admitted.
+Proof. simpl. reflexivity.  Qed.
 Example test_factorial2:          (factorial 5) = (mult 10 12).
-(* FILL IN HERE *) Admitted.
+Proof. simpl. reflexivity.  Qed.
 (** [] *)
 
 (** ここで紹介する"notation"（表記法）という機能を使うことで、加算、減算、乗算のような数値を扱う式をずっと読みやすく、書きやすくすることができます。 *)
@@ -362,14 +372,14 @@ Proof. simpl. reflexivity.  Qed.
 注：[simpl]タクティックを使ってうまくいかない場合は、代わりに[compute]を試してください。それはよりうまく作られた[simpl]と言えるものですが、そもそもシンプルでエレガントな解が書けていれば、[simpl]で十分に評価できるはずです。 *)
 
 Definition blt_nat (n m : nat) : bool :=
-  (* FILL IN HERE *) admit.
+  andb (negb (beq_nat n m)) (ble_nat n m).
 
 Example test_blt_nat1:             (blt_nat 2 2) = false.
-(* FILL IN HERE *) Admitted.
+Proof. simpl. reflexivity.  Qed.
 Example test_blt_nat2:             (blt_nat 2 4) = true.
-(* FILL IN HERE *) Admitted.
+Proof. simpl. reflexivity.  Qed.
 Example test_blt_nat3:             (blt_nat 4 2) = false.
-(* FILL IN HERE *) Admitted.
+Proof. simpl. reflexivity.  Qed.
 (** [] *)
 
 
