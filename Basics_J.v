@@ -410,12 +410,21 @@ Proof.
 (** この問い合わせの結果、Coqが返す応答はなにか？ *)
 
 Eval simpl in (forall n:nat, n + 0 = n).
+(* = forall n : nat, n + 0 = n
+   : Prop *)
 
 (** また次のものの場合はどうか？ *)
 
 Eval simpl in (forall n:nat, 0 + n = n).
+(* = forall n : nat, n = n
+   : Prop *)
 
 (** この二つの違いを示せ。  [] *)
+(* (forall n:nat, n + 0 = n)をA、(forall n:nat, 0 + n = n)をBとする。
+ * plusの定義は第一引数を減少させて簡約することを要求している。
+ * そのためAでは第一引数がforallのnであるため、これ以上簡約することはできない。
+ * Bでは第一引数がOであるため、簡約して第二引数を式の値とすることができる。
+ *)
 
 
 (** * [intros]タクティック *)
