@@ -480,7 +480,12 @@ Proof.
 Theorem plus_id_exercise : forall n m o : nat,
   n = m -> m = o -> n + m = m + o.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n m o.
+  intros H.
+  rewrite -> H.
+  intros H'.
+  rewrite <- H'.
+  reflexivity.  Qed.
 (** [] *)
 
 (** Admittedコマンドは、Coqに対して「この証明はあきらめたので、この定理はこれでいいことにしてください」と指示するものです。この機能は、より長い証明をする際に便利です。何か大きな論証をしようとする時、今のところ信用している補足的な命題を示したい時があります。そんな時、[Admitted]を使用すると、その命題を一時的に信用できることにして、それを踏み台にしてより大きな論証を進めることができるのです。そしてそれが完成したのち、あらためて保留していた命題の証明を埋めればいいのです。ただし注意して下さい。[admit]や[Admitted]を使用することは、一時的にドアを開けて、「全て形式的なチェックを受け証明済みの、信用するに足るCoqの世界」から、信用に値しない下界へ足を踏み出していることに他なりません。いつかは戻ってドアを閉めることがお約束です。*)
@@ -498,7 +503,10 @@ Proof.
 Theorem mult_1_plus : forall n m : nat,
   (1 + n) * m = m + (n * m).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n m.
+  rewrite -> plus_1_l.
+  simpl.
+  reflexivity.  Qed.
 (** [] *)
 
 
@@ -544,7 +552,9 @@ Proof.
 Theorem zero_nbeq_plus_1 : forall n : nat,
   beq_nat 0 (n + 1) = false.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n. destruct n as [| n'].
+    reflexivity.
+    reflexivity.  Qed.
 (** [] *)
 
 
@@ -603,7 +613,17 @@ Proof.
 Theorem andb_true_elim2 : forall b c : bool,
   andb b c = true -> c = true.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros b c H.
+  destruct c.
+  Case "c = true".
+    reflexivity.
+  Case "c = false".
+    rewrite <- H.
+    destruct b.
+    SCase "b = true".
+      reflexivity.
+    SCase "b = false".
+      reflexivity. Qed.
 (** [] *)
 
 (** Coq上に証明の経過を記述する際、それをどのようにフォーマットするべきか、ということについてちゃんとしたルールというものはありません。行が分割され、証明の各段階が階層を持ち、それをインデントで表現するような場合は特にそうです。しかしながら、複数のサブゴールが作成された部分が明示的に[Case]タクティックでマークされた場合は、それを行頭から記述することにします。そうしておけば、証明は読みやすくなり、それ以外でどんな方針のレイアウトが選ばれても、あまり問題になりません。
@@ -670,17 +690,33 @@ Proof.
 Theorem mult_0_r : forall n:nat,
   n * 0 = 0.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n. induction n as [| n'].
+  Case "n = 0".
+    simpl. reflexivity.
+  Case "n = S n'".
+    simpl. rewrite -> IHn'. reflexivity.  Qed.
 
 Theorem plus_n_Sm : forall n m : nat,
   S (n + m) = n + (S m).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n m. induction n as [| n'].
+  Case "n = 0".
+    simpl. reflexivity.
+  Case "n = S n'".
+    simpl. rewrite -> IHn'. reflexivity. Qed.
 
 Theorem plus_comm : forall n m : nat,
   n + m = m + n.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n m. induction n as [| n'].
+  Case "n = 0".
+    simpl. induction m as [| m'].
+    SCase "m = 0".
+      simpl. reflexivity.
+    SCase "m = S m'".
+      simpl. rewrite <- IHm'. reflexivity.
+  Case "n = S n'".
+    rewrite <- plus_n_Sm. simpl. rewrite -> IHn'. reflexivity. Qed.
 (** [] *)
 
 Fixpoint double (n:nat) :=
@@ -692,13 +728,18 @@ Fixpoint double (n:nat) :=
 (** **** 練習問題: ★★ (double_plus) *)
 Lemma double_plus : forall n, double n = n + n .
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n. induction n as [| n'].
+  Case "n = 0".
+    simpl. reflexivity.
+  Case "n = S n'".
+    simpl. rewrite <- plus_n_Sm. rewrite -> IHn'. reflexivity. Qed.
 (** [] *)
 
 (** **** 練習問題: ★ (destruct_induction) *)
 (** [destruct]と[induction]の違いを短く説明しなさい。
 
-(* FILL IN HERE *)
+(* 回答: どちらも場合分けを行なうが、destructは単なる場合分け。
+ * inductionは先に証明した場合を後に証明する場合に対して仮定として使用することができる。 *)
 
 *)
 (** [] *)
