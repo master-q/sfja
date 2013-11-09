@@ -810,6 +810,7 @@ Proof.
 (** 定理：加法は可換である。
 
     Proof: (* FILL IN HERE *)
+    *** めんどいから非形式的な証明はいいや。。。 ***
 []
 *)
 
@@ -819,6 +820,7 @@ Proof.
    定理：true=beq_nat n n forany n.（任意のnについて、nはnと等しいという命題がtrueとなる）
 
     Proof: (* FILL IN HERE *)
+    *** めんどいから非形式的な証明はいいや。。。 ***
 []
  *)
 
@@ -826,7 +828,15 @@ Proof.
 Theorem beq_nat_refl : forall n : nat,
   true = beq_nat n n.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n.
+  induction n as [| n'].
+  Case "n = 0".
+    reflexivity.
+  Case "n = S n'".
+    simpl.
+    rewrite <- IHn'.
+    reflexivity.
+  Qed.
 (** [] *)
 
 
@@ -877,14 +887,24 @@ Proof.
 Theorem plus_swap : forall n m p : nat,
   n + (m + p) = m + (n + p).
 Proof.
-  (* FILL IN HERE *) Admitted.
-
+  intros.
+  rewrite -> plus_assoc.
+  assert (H: m + (n + p) = m + n + p).
+    Case "Proof of assertion".
+    rewrite -> plus_assoc. reflexivity.
+  rewrite -> H.
+  assert (H': n + m = m + n).
+    Case "Proof of assertion".
+    rewrite -> plus_comm. reflexivity.
+  rewrite -> H'. reflexivity. Qed.
 
 (** では、乗法が可換であることを証明しましょう。おそらく、補助的な定理を定義し、それを使って全体を証明することになると思います。先ほど証明した[plus_swap]が便利に使えるでしょう。 *)
 
 Theorem mult_comm : forall m n : nat,
  m * n = n * m.
 Proof.
+  intros. 
+
   (* FILL IN HERE *) Admitted.
 (** [] *)
 
