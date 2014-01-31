@@ -204,6 +204,19 @@ Theorem plus_n_n_injective_take2 : forall n m,
      n + n = m + m ->
      n = m.
 Proof.
+  intros n m.
+  generalize dependent n.
+  induction m as [| m'].
+  Case "m = O". simpl. intros n eq. destruct n as [| n'].
+    SCase "n = O". reflexivity.
+    SCase "n = S n'". inversion eq.
+  Case "m = S m'". intros n. destruct n as [| n'].
+    SCase "n = O". intros eq. inversion eq.
+    SCase "n = S n'".
+      assert (n' = m') as H.
+      SSCase "Proof of assertion".
+        apply IHm'.
+
   (* FILL IN HERE *) Admitted.
 
 (** [l]に関する帰納法で示しなさい。 *)
@@ -212,7 +225,12 @@ Theorem index_after_last: forall (n : nat) (X : Type) (l : list X),
      length l = n ->
      index (S n) l = None.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n X l.
+  generalize dependent n.
+  induction l as [| l'].
+  Case "l = []". intros n eq. simpl. reflexivity.
+  Case "l = [x]". simpl. intros n eq. inversion eq.
+  apply IHl. reflexivity. Qed.
 (** [] *)
 
 (** **** 練習問題: ★★★, optional (index_after_last_informal) *)
@@ -233,7 +251,15 @@ Theorem length_snoc''' : forall (n : nat) (X : Type)
      length l = n ->
      length (snoc l v) = S n.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n X v l. generalize dependent n. generalize dependent v.
+  induction l as [| l'].
+  Case "l = []". simpl. intros X' n eq. inversion eq. reflexivity.
+  Case "l = [x]". intros X' n eq. induction n as [| n'].
+    SCase "n = O". simpl. inversion eq.
+    SCase "n = S O". simpl.
+    assert (length (snoc l X') = S n').
+    SSCase "Proof of assertion". apply IHl. inversion eq. reflexivity.
+    rewrite -> H. reflexivity. Qed.
 (** [] *)
 
 (** **** 練習問題: ★★★, optional (app_length_cons) *)
