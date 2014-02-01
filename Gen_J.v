@@ -210,8 +210,8 @@ Proof.
   Case "m = O". simpl. intros n eq. destruct n as [| n'].
     SCase "n = O". reflexivity.
     SCase "n = S n'". inversion eq.
-  Case "m = S m'". intros n. destruct n as [| n'].
-    SCase "n = O". intros eq. inversion eq.
+  Case "m = S m'". intros n eq. destruct n as [| n'].
+    SCase "n = O". inversion eq.
     SCase "n = S n'".
       assert (n' = m') as H.
       SSCase "Proof of assertion".
@@ -229,8 +229,8 @@ Proof.
   generalize dependent n.
   induction l as [| l'].
   Case "l = []". intros n eq. simpl. reflexivity.
-  Case "l = [x]". simpl. intros n eq. inversion eq.
-  apply IHl. reflexivity. Qed.
+  Case "l = [x]". simpl. intros n eq.
+  rewrite <- eq. apply IHl. reflexivity. Qed.
 (** [] *)
 
 (** **** 練習問題: ★★★, optional (index_after_last_informal) *)
@@ -239,6 +239,12 @@ Proof.
      _Theorem_: すべてのSet [X], リスト [l : list X], 自然数[n]に対して、[length l = n] ならば [index (S n) l = None]。
 
      _Proof_:
+任意のリストlにつて帰納法を適用する。
+lが空リストの時、
+  indexの定義より"index X [] = None"であることが導かれるので、
+  "length [] = n -> index (S n) [] = None"は成立する。
+lが要素を持ったリストの時、
+  
      (* FILL IN HERE *)
 []
 *)
