@@ -213,11 +213,8 @@ Proof.
   Case "m = S m'". intros n eq. destruct n as [| n'].
     SCase "n = O". inversion eq.
     SCase "n = S n'".
-      assert (n' = m') as H.
-      SSCase "Proof of assertion".
-        apply IHm'.
-
-  (* FILL IN HERE *) Admitted.
+      simpl in eq. inversion eq. rewrite <- plus_n_Sm in H0. rewrite <- plus_n_Sm in H0. inversion H0. erewrite (IHm' _ H1). reflexivity. Qed.
+(* SearchAbout (_ + S _).  これで定理検索できるよ! *)
 
 (** [l]に関する帰納法で示しなさい。 *)
 
@@ -243,9 +240,13 @@ Proof.
 lが空リストの時、
   indexの定義より"index X [] = None"であることが導かれるので、
   "length [] = n -> index (S n) [] = None"は成立する。
-lが要素を持ったリストの時、
-  
-     (* FILL IN HERE *)
+lが要素を持ったリストの時、リストがl' :: lで成立すること示す。
+  即ち、length (l' :: l) = nであるときindex (S n) (l' :: l) = Noneであることが言えれば良い。
+  length (l' :: l) = nはl'が一つの要素なので、S (length l) = n (式A)にlengthの定義に従って簡略できる。
+  index (S n) (l' :: l) = Noneはl'が一つの要素なので、index n l = None (式B)とindexの定義に従って簡略できる。
+  式Bのnは式AによってS (length l)に書き換えられる。
+  すなわちindex (S (length l)) l = None (式C)が得られる。
+  式Cは帰納法の仮定から成立する。
 []
 *)
 
@@ -258,13 +259,13 @@ Theorem length_snoc''' : forall (n : nat) (X : Type)
      length (snoc l v) = S n.
 Proof.
   intros n X v l. generalize dependent n. generalize dependent v.
-  induction l as [| l'].
-  Case "l = []". simpl. intros X' n eq. inversion eq. reflexivity.
-  Case "l = [x]". intros X' n eq. induction n as [| n'].
-    SCase "n = O". simpl. inversion eq.
-    SCase "n = S O". simpl.
-    assert (length (snoc l X') = S n').
-    SSCase "Proof of assertion". apply IHl. inversion eq. reflexivity.
+  induction l as [| x l'].
+  Case "l = []". simpl. intros X' n eq. rewrite -> eq. reflexivity.
+  Case "l = x :: l'". intros X' n eq. destruct n as [| n'].
+    SCase "n = O". inversion eq.
+    SCase "n >= 1". simpl.
+    assert (length (snoc l' X') = S n').
+    SSCase "Proof of assertion". apply IHl'. inversion eq. reflexivity.
     rewrite -> H. reflexivity. Qed.
 (** [] *)
 
